@@ -36,7 +36,21 @@ def makeboard(showboard):
             showboard[i].append([0])
 def fillboard(showboard, fillboard):
     print("yes")
+    # 0 = empty, 1 = checked, clear, 2 = flagged, 3 = checked, bomb
 showboard = [[0]]     
 hideboard = showboard
 makeboard(showboard)
 printboard(len(showboard))
+win = 0
+lose = 0
+column = "a"
+row = "a"
+while win == 0 and lose == 0:
+    while not column.isdigit():
+        column = input("what column do you want to check")
+        if not column.isdigit():
+            print("please input a valid number")
+    while not row.isdigit():
+        row = input("what row do you want to check")
+        if not row.isdigit():
+            print("please input a valid number")
