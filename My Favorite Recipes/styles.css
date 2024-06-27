@@ -1,0 +1,13 @@
+.link{
+    color: black;
+    text-align: center;
+}
+.center{
+    text-align: center;
+}
+.body{
+    background-image: url("img/meatloaf-tn.jpg");
+  }
+  .body2{
+    background-image: linear-gradient(to right top, #370507, #600817, #8c0b23, #ba0e2e, #eb1238);
+  }
