@@ -35,30 +35,56 @@ def makeboard(showboard):
     for i in range(0, int(math.ceil(float(boardlength)))+1):
         for o in range(1, int(math.ceil(float(boardlength)))+1):
             showboard[i].append(0)
-def fillboard(hideboard, boardlength, difficulty):
+def fillboard(hideboard, boardlength, difficulty, disableflood):
     # 0 = empty, 1-8 = checked, clear, i = flagged, x = checked, bomb
     maxbombrow=0
     bombinrow=0
     totalbomb = 0
-    for i in range(1, int(math.ceil(float(boardlength)))):
+    for i in range(1, int(math.ceil(float(boardlength)))+1):
         hideboard.append([0])
-    for i in range(0, int(math.ceil(float(boardlength)))):
-        for o in range(1, int(math.ceil(float(boardlength)))):
+    for i in range(0, int(math.ceil(float(boardlength)))+1):
+        for o in range(1, int(math.ceil(float(boardlength)))+1):
             hideboard[i].append(0)
-    for i in range(0, len(hideboard)):
+    for i in range(0, len(hideboard)-1):
         maxbombrow = random.randint(1, math.ceil(boardlength/3))
-        for o in range(0, len(hideboard)):
+        for o in range(0, len(hideboard)-1):
             if bombinrow == maxbombrow:
                 break
             elif random.random() > 1+(0.1*(-(int(difficulty)))):
                 hideboard[i][o] += 1
                 bombinrow += 1
                 totalbomb += 1
+                disableflood.append([i-1, o-1])
     print("there are {} bombs on the board".format(totalbomb))
     return totalbomb
-def checkboard(a, b, hideboard, nearbybombs):
-    if hideboard[int(row)-a-1][int(column)-b-1] == 1:
+def checkboard(hideboard, row, column):
+    nearbybombs = 0
+    for a in range(0,3):
+        for b in range(0,3):
+            if hideboard[int(row)-a][int(column)-b] == 1:
                 nearbybombs += 1
+    return nearbybombs
+def floodboard(showboard, hideboard, row, column, disableflood):
+        if row < len(showboard) and column < len(showboard):
+            if showboard[row][column] == 0 or showboard[row][column] == " ":
+                if not [row, column] in disableflood:
+                    disableflood.append([row, column])
+                    if row+1 < len(showboard) and column+1 < len(showboard):
+                        if checkboard(hideboard, row+1, column+1) == 0:
+                            showboard[row][column] = " "
+                            for o in range(0,3):
+                                for p in range(0,3):
+                                    if row-o+1 > -1 and column - p+1 > -1:
+                                        if row-o+1 < len(showboard) and column - p+1 < len(showboard):
+                                            showboard[row-o+1][column-p+1] = floodboard(showboard, hideboard, row-o+1, column-p+1, disableflood)
+                                            printboard(len(showboard))
+                            return " "
+                        else:
+                            return checkboard(hideboard, row-1, column-1)
+                else:
+                    return showboard[row][column]
+            else: 
+                return showboard[row][column]
 showboard = [[0]]     
 makeboard(showboard)
 boardlength = len(showboard)
@@ -69,6 +95,12 @@ bombsflagged = 0
 fakeflag = 0
 hideboard = [[0]]
 difficulty = "a"
+nearbybombs = 0
+disableflood=[]
+for i in range(-boardlength,boardlength+1):
+    disableflood.append([boardlength,i])
+for i in range(-boardlength,boardlength+1):
+    disableflood.append([i, boardlength])
 while not difficulty.isdigit():
     difficulty = input("choose your difficulty (1-9)")
     if not difficulty.isdigit():
@@ -78,9 +110,11 @@ while not difficulty.isdigit():
         print("please input a valid number")
         difficulty = "a"
         continue
-boardbombs = fillboard(hideboard, boardlength-1, difficulty)
+boardbombs = fillboard(hideboard, boardlength-1, difficulty, disableflood)
+print(showboard)
+print(hideboard)
 while win == 0 and lose == 0:
-    print(showboard)
+    stopflood = 0
     nearbybombs = 0
     column = "a"
     row = "a"
@@ -121,10 +155,12 @@ while win == 0 and lose == 0:
         showboard[int(row)-1][int(column)-1] = "i"
         fakeflag += 1
     elif hideboard[int(row)-1][int(column)-1] == 0 and check == "check":
-            for a in range(0,3):
-                for b in range(0,3):
-                    checkboard(a, b, hideboard, nearbybombs)
-            if nearbybombs == 0:
-                showboard[int(row)-1][int(column)-1] = " "
-            else: 
-                showboard[int(row)-1][int(column)-1] = nearbybombs
+        nearbybombs = (checkboard(hideboard, row, column))
+        if nearbybombs == 0:
+            showboard[int(row)-1][int(column)-1] = " "
+            if not [int(row)-1, int(column)-1] in disableflood:
+                showboard[int(row)-1][int(column)-1] = floodboard(showboard, hideboard, int(row)-1, int(column)-1, disableflood)
+                if showboard[int(row)-1][int(column)-1] == " ":
+                    disableflood.append([int(row)-1, int(column)-1])  
+        else: 
+            showboard[int(row)-1][int(column)-1] = nearbybombs
