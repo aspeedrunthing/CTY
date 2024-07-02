@@ -77,10 +77,9 @@ def floodboard(showboard, hideboard, row, column, disableflood):
                                     if row-o+1 > -1 and column - p+1 > -1:
                                         if row-o+1 < len(showboard) and column - p+1 < len(showboard):
                                             showboard[row-o+1][column-p+1] = floodboard(showboard, hideboard, row-o+1, column-p+1, disableflood)
-                                            printboard(len(showboard))
                             return " "
                         else:
-                            return checkboard(hideboard, row-1, column-1)
+                            return checkboard(hideboard, row+1, column+1)
                 else:
                     return showboard[row][column]
             else: 
@@ -106,7 +105,7 @@ while not difficulty.isdigit():
     if not difficulty.isdigit():
         print("please input a valid number")
         continue
-    elif int(math.ceil(float(difficulty))) > 9 and int(math.floor(float(difficulty))) < 1:
+    elif int(math.ceil(float(difficulty))) > 9 or int(math.floor(float(difficulty))) < 1:
         print("please input a valid number")
         difficulty = "a"
         continue
@@ -124,9 +123,15 @@ while win == 0 and lose == 0:
         column = input("what column do you want to check")
         if not column.isdigit():
             print("please input a valid number")
+        elif int(column) > boardlength-1 or int(column) < 1:
+            column = "a"
+            print("please input a valid number")
     while not row.isdigit():
         row = input("what row do you want to check")
         if not row.isdigit():
+            print("please input a valid number")
+        elif int(row) > boardlength-1 or int(row) < 1:
+            row = "a"
             print("please input a valid number")
     while not check == "check" and not check == "flag":
         check = input("do you want to check or flag this spot?")
