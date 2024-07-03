@@ -55,6 +55,7 @@ def fillboard(hideboard, boardlength, difficulty, disableflood):
                 bombinrow += 1
                 totalbomb += 1
                 disableflood.append([i-1, o-1])
+                hideboard[i-1][o-1] = 2
     print("there are {} bombs on the board".format(totalbomb))
     return totalbomb
 def checkboard(hideboard, row, column):
@@ -79,9 +80,15 @@ def floodboard(showboard, hideboard, row, column, disableflood):
                                             showboard[row-o+1][column-p+1] = floodboard(showboard, hideboard, row-o+1, column-p+1, disableflood)
                             return " "
                         else:
-                            return checkboard(hideboard, row+1, column+1)
+                            if hideboard[row+1][column+1] == 1:
+                                return checkboard(hideboard, row+1, column+1)+1
+                            else:
+                                return checkboard(hideboard, row+1, column+1)
                 else:
-                    return showboard[row][column]
+                    if hideboard[row][column] == 2:
+                        return checkboard(hideboard, row+1, column+1)
+                    else:
+                        return showboard[row][column]
             else: 
                 return showboard[row][column]
 showboard = [[0]]     
@@ -110,8 +117,6 @@ while not difficulty.isdigit():
         difficulty = "a"
         continue
 boardbombs = fillboard(hideboard, boardlength-1, difficulty, disableflood)
-print(showboard)
-print(hideboard)
 while win == 0 and lose == 0:
     stopflood = 0
     nearbybombs = 0
@@ -135,8 +140,12 @@ while win == 0 and lose == 0:
             print("please input a valid number")
     while not check == "check" and not check == "flag":
         check = input("do you want to check or flag this spot?")
-        if not check == "check" and not check == "flag":
+        if not check == "check" or check == "c" and not check == "flag" or check == "f":
             print("please input a valid action")
+    if check == "c":
+        check = "check"
+    if check == "f":
+        check = "flag"
     if hideboard[int(row)-1][int(column)-1] == 1 and check == "check":
         lose = 1
         showboard[int(row)-1][int(column)-1] = "x"
@@ -156,11 +165,11 @@ while win == 0 and lose == 0:
             print("all bombs have been found!")
             print("but some safe areas are still flagged")
             print("fix them to win!")
-    elif hideboard[int(row)-1][int(column)-1] == 0 and check == "flag":
+    elif hideboard[int(row)-1][int(column)-1] == 0 and check == "flag" or hideboard[int(row)-1][int(column)-1] == 2 and check == "flag":
         showboard[int(row)-1][int(column)-1] = "i"
         fakeflag += 1
-    elif hideboard[int(row)-1][int(column)-1] == 0 and check == "check":
-        nearbybombs = (checkboard(hideboard, row, column))
+    elif hideboard[int(row)-1][int(column)-1] == 0 and check == "check" or hideboard[int(row)-1][int(column)-1] == 2 and check == "check":
+        nearbybombs = (checkboard(hideboard, int(row), int(column)))
         if nearbybombs == 0:
             showboard[int(row)-1][int(column)-1] = " "
             if not [int(row)-1, int(column)-1] in disableflood:
