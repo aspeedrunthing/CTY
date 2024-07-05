@@ -68,3 +68,9 @@ while win == 0:
     if turns == 42 and win == 0:
         print("The game has ended in a tie. No one wins")
         break
+    for i in range(0, 3):
+        for t in range(0, 6):
+            if board[i][t] == board[i+1][t] == board[i+2][t] == board[i+3][t] !=0:
+                win += 1
+                print("Player", board[i][t], "has won")
+                break
