@@ -4,7 +4,6 @@ def playstory(story, path, options):
     currentstory1 = 0
     currentpath = []
     currentoption = 0
-    playending = 0
     print(story[0][0])
     for i in range(0, options[0][0]):
         if i == len(path[0])-1:
@@ -16,11 +15,9 @@ def playstory(story, path, options):
     choice = choice+currentoption
     for i in range(0, choice-1):
         currentoption+=options[currentstory1+1][i]
-        if options[currentstory1+1][i] == 0:
-            playending += 1
     currentpath.append(choice)
     currentstory1 += 1
-    while options[currentstory1][choice-1] != 0:
+    while options[currentstory1][choice-1] > 0:
         print(story[currentstory1][currentpath[len(currentpath)-1]-1])
         for i in range(0, options[currentstory1][choice-1]):
             if i == options[currentstory1][choice-1]-1:
@@ -35,7 +32,8 @@ def playstory(story, path, options):
         for i in range(0, choice-1):
             currentoption+=options[currentstory1][i]
         currentpath.append(choice)
-    print(end[playending][0])
+    print(story[currentstory1][choice-1])
+    print(end[abs(options[currentstory1][choice-1])][0])
 story = []
 path = []
 options = []
@@ -55,10 +53,15 @@ if saveload == "write":
         story.append([])
         path.append([])
         options.append([])
+        paths = 0
         for i in range(0, len(path[len(path)-2])):
             story[len(story)-1].append(input("What do you want next line to be for this path?"))
-            options[len(options)-1].append(int(input("How many paths do you want from the previous line?")))
-            if options[len(options)-1][i] == 0:
+            paths = int(input("How many paths do you want from the previous line?"))
+            if paths != 0:
+                options[len(options)-1].append(paths)
+            else:
+                options[len(options)-1].append(-len(end))
+            if paths == 0:
                 end.append([input("Choose an ending")])
             for o in range(0, options[len(options)-1][i]):
                 path[len(path)-1].append(input("Choose a path option"))
