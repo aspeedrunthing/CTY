@@ -1,22 +1,88 @@
 import random
 import time
+import math
 board = [[" "," "," "," "," "," "," "," "," "," "," "],[" "," "," "," "," "," "," "," "," "," "," "],[" "," "," "," "," "," "," "," "," "," "," "],[" "," "," "," "," "," "," "," "," "," "," "],[" "," "," "," "," "," "," "," "," "," "," "],[" "," "," "," "," "," "," "," "," "," "," "],[" "," "," "," "," "," "," "," "," "," "," "],[" "," "," "," "," "," "," "," "," "," "," "],[" "," "," "," "," "," "," "," "," "," "," "],[" "," "," "," "," "," "," "," "," "," "," "],[" "," "," "," "," "," "," "," "," "," "," "],[" "," "," "," "," "," "," "," "," "," "," "],[" "," "," "," "," "," "," "," "," "," "," "],[" "," "," "," "," "," "," "," "," "," "," "],[" "," "," "," "," "," "," "," "," "," "," "],[" "," "," "," "," "," "," "," "," "," "," "],[" "," "," "," "," "," "," "," "," "," "," "],[" "," "," "," "," "," "," "," "," "," "," "],[" "," "," "," "," "," "," "," "," "," "," "],[" "," "," "," "," "," "," "," "," "," "," "],[" "," "," "," "," "," "," "," "," "," "," "],[" "," "," "," "," "," "," "," "," "," "," "]]
 placeboard = [[0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0,0,0,0]]
 #printingboard
-def printboard():  
+def printboard():
+    for i in range(0,21):
+        print("# ",end="")
+    print()
+    print("#        LINES - {}".format(lines), end = "")
+    for i in range(0,(-len(str(lines)))+3):
+        print(" ", end="")
+    print("      # #           #")
     for i in range(0,11):
         print("#", end=" ")
-    print("#")
-    for i in range(1, 21):
+    print("# # # #   TOP     #")
+    for i in range(0,11):
         print("#", end=" ")
+    print("# # # # 0         #")
+    for i in range(1, 21):
+        print("# #", end=" ")
         for o in range(0, 10):
             print(board[i][o], end=" ")
-        print("#")
-    for i in range(0,11):
-        print("#", end=" ")
-    print("#")
+        print("# #", end = " ")
+        if i == 20 or i == 19 or i == 18 or i == 17 or i == 14 or i == 7 or i == 5 or i == 13 or i == 6:
+            print("# # # # # # #", end = "")
+        elif i == 16:
+            print("#    ",level, end = "")
+            for i in range(0,(-len(str(level)))+3):
+                print(" ", end="")
+            print("   #",end="")
+        elif i == 15:
+            print("#   LEVEL   #", end="")
+        elif i == 8:
+            print("#   NEXT  # #",end="")
+        elif i == 9 or i == 12:
+            print("#         # #",end="")
+        elif i == 10:
+            print("#", end=" ")
+            for i in range(0,len(pieces[nextpiece][0])):
+                if pieces[nextpiece][0][1][i] == 0:
+                    print(" ",end=" ")
+                else:
+                    print(pieces[nextpiece][0][1][i],end=" ")
+            if nextpiece == 1 or nextpiece == 0:
+                print("",end="")
+            else:
+                for i in range(0,(-len(pieces[nextpiece][0][1]))+5):
+                    print(" ",end="")
+            print("# #",end="")
+        elif i == 11:
+            print("#", end=" ")
+            for i in range(0,len(pieces[nextpiece][0])):
+                if pieces[nextpiece][0][2][i] == 0:
+                    print(" ",end=" ")
+                else:
+                    print(pieces[nextpiece][0][2][i],end=" ")
+            if nextpiece == 1 or nextpiece == 0:
+                print("",end="")
+            else:
+                for i in range(0,(-len(pieces[nextpiece][0][2]))+5):
+                    print(" ",end="")
+            print("# #",end="")
+        elif i == 5:
+            print("# # # # # # #",end="")
+        elif i == 4 or i == 1:
+            print("#           #",end="")
+        elif i == 2:
+            print("#   SCORE   #",end="")
+        elif i == 3:
+            print("# ",end="")
+            print(score,end="")
+            for i in range(0,(-len(str(score)))+10):
+                print(" ",end="")
+            print("#",end="")
+        print()
+    for o in range(0,2):
+        for i in range(0,11):
+            print("#", end=" ")
+        print("# # # # # # # # # #")
 #clearinglines
-def clearlines():
+lines = 0
+def clearlines(lines):
+    line = 0
     clearline = []
     containline = 0
     for i in range(0,22):
@@ -39,7 +105,11 @@ def clearlines():
         for i in range(0, len(clearline)):
             board.insert(2, [" "," "," "," "," "," "," "," "," "," "," "])
             placeboard.insert(2, [0,0,0,0,0,0,0,0,0,0,0])
-printboard()
+            line += 1
+    return line
+placedpieces = [0,0,0,0,0,0,0]
+score = 0
+level = 0
 lose = 0
 blockboard = [[" ", " ", " ", " "], [" ", " ", " ", " "], [" ", " ", " ", " "], [" ", " ", " ", " "]]
 pieces = [[[[0,0,0,0],[0,0,0,0],[1,1,1,1],[0,0,0,0]],[[0,0,1,0],[0,0,1,0],[0,0,1,0],[0,0,1,0]],[[0,0,0,0],[0,0,0,0],[1,1,1,1],[0,0,0,0]],[[0,0,1,0],[0,0,1,0],[0,0,1,0],[0,0,1,0]]],[[[0,0,0,0],[0,1,1,0],[0,1,1,0],[0,0,0,0]],[[0,0,0,0],[0,1,1,0],[0,1,1,0],[0,0,0,0]],[[0,0,0,0],[0,1,1,0],[0,1,1,0],[0,0,0,0]],[[0,0,0,0],[0,1,1,0],[0,1,1,0],[0,0,0,0]]], [[[0,0,0],[1,1,1],[1,0,0]],[[1,1,0],[0,1,0],[0,1,0]],[[0,0,1],[1,1,1],[0,0,0]],[[0,1,0],[0,1,0],[0,1,1]]], [[[0,0,0],[1,1,1],[0,0,1]],[[0,1,0],[0,1,0],[1,1,0]],[[1,0,0],[1,1,1],[0,0,0]],[[0,1,1],[0,1,0],[0,1,0]]],[[[0,0,0],[1,1,0],[0,1,1]],[[0,0,1],[0,1,1],[0,1,0]],[[0,0,0],[1,1,0],[0,1,1]],[[0,0,1],[0,1,1],[0,1,0]]],[[[0,0,0],[0,1,1],[1,1,0]],[[0,1,0],[0,1,1],[0,0,1]],[[0,0,0],[0,1,1],[1,1,0]],[[0,1,0],[0,1,1],[0,0,1]]],[[[0,0,0],[1,1,1],[0,1,0]],[[0,1,0],[1,1,0],[0,1,0]],[[0,1,0],[1,1,1],[0,0,0]],[[0,1,0],[0,1,1],[0,1,0]]]]
@@ -51,6 +121,7 @@ y = 0
 x = 4
 newpiece = 1
 previousplaces = []
+printboard()
 while lose == 0:
     if newpiece == 1:
         newpiece = 0
@@ -67,6 +138,7 @@ while lose == 0:
         x=4
         y=1
         placepiece = nextpiece
+        placedpieces[placepiece] += 1
         nextpiece = random.randint(0, 6)
         rotation = 0
         for i in range(0, len(previousplaces)):
@@ -106,7 +178,20 @@ while lose == 0:
                 if x+i == 0:
                     pass
                 else:
-                    x -= 1
+                    checkpiece = 0
+                    for i in range(0,len(blockboard)):
+                        for o in range(0,3):
+                            try:
+                                if blockboard[o][i] == 1 and blockboard[o][i-1]==" ":
+                                    checkcollision.append([o+y,i+x])
+                            except:
+                                checkcollision.append([o+y,i+x])
+                    for i in range(0,len(checkcollision)):
+                        if placeboard[checkcollision[i][0]+1][checkcollision[i][1]-1]==1:
+                            checkpiece += 1
+                            break
+                    if checkpiece == 0:
+                        x-=1
                 break
     elif move == "s":
         checkpiece = 0
@@ -173,21 +258,56 @@ while lose == 0:
                     pass
                 else:
                     checkpiece = 0
-                    for i in range(2,-1,-1):
-                        for o in range(0,3):
-                            if blockboard[o][i] == 1 and blockboard[o][i+1]==" ":
+                    for i in range(len(blockboard)-1,-1,-1):
+                        for o in range(0,len(blockboard)):
+                            try:
+                                if blockboard[o][i] == 1 and blockboard[o][i+1]==" ":
+                                    checkcollision.append([o+y,i+x])
+                            except:
                                 checkcollision.append([o+y,i+x])
                     for i in range(0,len(checkcollision)):
-                        if placeboard[checkcollision[i][0]][checkcollision[i][1]+1]==1:
+                        if placeboard[checkcollision[i][0]+1][checkcollision[i][1]+1]==1:
                             checkpiece += 1
                             break
                     if checkpiece == 0:
                         x+=1
                 break
     elif move == "w":
-        rotation += 1
-        if rotation == 3:
-            rotation = -1
+        checkpiece = 0
+        if placepiece == 0:
+            if rotation == 3:
+                for i in range(0, len(blockboard)):
+                    for o in range(0, len(blockboard)):
+                        if pieces[placepiece][0][i][o] == 1 and placeboard[i+y][o+x] == 1:
+                            checkpiece += 1
+                            break
+                if checkpiece == 0:
+                    rotation = 0
+            else:
+                for i in range(0, len(blockboard)):
+                    for o in range(0, len(blockboard)):
+                        if pieces[placepiece][rotation][i][o] == 1 and placeboard[i+y][o+x] == 1:
+                            checkpiece += 1
+                            break
+                if checkpiece == 0:
+                    rotation += 1
+        else:
+            if rotation == 3:
+                for i in range(0, 3):
+                    for o in range(0, 3):
+                        if pieces[placepiece][0][i][o] == 1 and placeboard[i+y][o+x] == 1:
+                            checkpiece += 1
+                            break
+                if checkpiece == 0:
+                    rotation = 0
+            else:
+                for i in range(0, 3):
+                    for o in range(0, 3):
+                        if pieces[placepiece][rotation][i][o] == 1 and placeboard[i+y][o+x] == 1:
+                            checkpiece += 1
+                            break
+                if checkpiece == 0:
+                    rotation += 1
     checkpiece = 0
     if placepiece != 0:
         if not y == 19:
@@ -272,10 +392,22 @@ while lose == 0:
                     placedpiece = 0
         except:
             newpiece = 1
-    clearlines()
+    line = clearlines(lines)
+    if line == 1:
+        score += 40 * (level + 1)
+    elif line == 2:
+        score += 100 * (level + 1)
+    elif line == 3:
+        score += 300 * (level + 1)
+    elif line == 4:
+        score += 1200 * (level + 1)
+    lines += line
+    level = math.floor(lines/10)
     for i in range(0, len(placeboard)):
         for o in range(0,len(placeboard[i])):
             if placeboard[i][o] == 0:
                 board[i-1][o] = " "
             else:
                 board[i-1][o] = placeboard[i][o]
+    if 1 in placeboard[2]:
+        lose = 1
